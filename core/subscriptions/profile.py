@@ -9,28 +9,30 @@ async def build_profile(
     tg_id: int,
 ):
 
-    user_query = select(User).where(
-        User.tg_id == tg_id
-    )
-
     user_result = await session.execute(
-        user_query
+        select(User).where(
+            User.tg_id == tg_id
+        )
     )
 
-    user = user_result.scalar_one()
+    user = user_result.scalar_one_or_none()
 
-    sub_query = select(
-        Subscription
-    ).where(
-        Subscription.user_id == user.id,
-        Subscription.active == True,
-    )
+    if not user:
+        return None
 
     sub_result = await session.execute(
-        sub_query
+        select(
+            Subscription
+        ).where(
+            Subscription.user_id == user.id,
+            Subscription.active == True,
+        )
     )
 
-    subscription = sub_result.scalar_one()
+    subscription = sub_result.scalar_one_or_none()
+
+    if not subscription:
+        return None
 
     return {
         "tg_id": user.tg_id,
@@ -40,4 +42,3 @@ async def build_profile(
         "expire": subscription.expires_at,
         "active": subscription.active,
     }
-pip install python-dotenvpip
