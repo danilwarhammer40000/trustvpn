@@ -8,7 +8,11 @@ from config.settings import (
 )
 
 from apps.public_bot.handlers import (
-    router,
+    router as main_router,
+)
+
+from apps.public_bot.connect_handler import (
+    router as connect_router,
 )
 
 
@@ -21,7 +25,11 @@ async def main():
     dp = Dispatcher()
 
     dp.include_router(
-        router
+        main_router
+    )
+
+    dp.include_router(
+        connect_router
     )
 
     await dp.start_polling(
