@@ -40,3 +40,4 @@ async def build_profile(
         "expire": subscription.expires_at,
         "active": subscription.active,
     }
+pip install python-dotenvpip
